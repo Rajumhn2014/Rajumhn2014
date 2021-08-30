@@ -20,6 +20,7 @@
                         <th scope="col">Email</th>
                         <th scope="col">Phone</th>
                         <th scope="col">Gender</th>
+                        <th>Active/Deactive</th>
                         <th scope="col" colspan="2" style="text-align:center;">Action</th>
                                         
                     </tr>
@@ -29,27 +30,37 @@
                         <?php $i=1;?>
 
                             @foreach ($students as $student)                            
-                                <tr>
+                                <tr>                                   
                                     
-                                    
-                                    <td><?php echo $i++; ?></td>
+                                    <td>{{$i}}</td>
                                     {{-- <td scope="row">{{$student->id}}</td> --}}
 
-                                    <td scope="row"><img src="{{$student->image ? asset('public/student/'.$student->image):asset('public/avatar.png')}}" 
+                                    <td scope="row"><img src="{{$student['image'] ? asset('public/student/'.$student['image']):asset('public/avatar.png')}}" 
                                         alt="image" width="50px" height="60px"></td>                                    
 
-                                    <td scope="row">{{$student->firstname}}</td>
-                                    <td scope="row">{{$student->lastname}}</td>
-                                    <td scope="row">{{$student->email}}</td>
-                                    <td scope="row">{{$student->phone}}</td>
-                                    <td scope="row">{{$student->gender}}</td>
+                                    <td scope="row">{{$student['fname']}}</td>
+                                    <td scope="row">{{$student['lname']}}</td>
+                                    <td scope="row">{{$student['email']}}</td>
+                                    <td scope="row">{{$student['phone']}}</td>
+                                    <td scope="row">{{$student['gender']}}</td>
+                                    <th>
+                                        @if($student['status'])
+                                            <a href="{{route('student.show',$student['id'])}}" class="text-success" data-tooltip="tooltip" data-placement="bottom" title="click for inactive">
+                                            Active
+                                            </a>
+                                            @else
+                                            <a href="{{route('student.show',$student['id'])}}" class="text-success" data-tooltip="tooltip" data-placement="bottom" title="click for inactive">
+                                            Deactive                                                                                       
+                                        </a>
+                                        @endif
+                                    </th>
                                     <th scope="col">
-                                        <a href="{{route('student.edit',$student->id)}}"><button class="btn btn-primary">Edit</button></a>
+                                        <a href="{{route('student.edit',$student['id'])}}"><button class="btn btn-primary">Edit</button></a>
                                     </th>
 
                                     <th scope="col">
 
-                                        <form action="{{route('student.destroy',$student->id)}}" method="POST">
+                                        <form action="{{route('student.destroy',$student['id'])}}" method="POST">
                                             @csrf
                                                 @method('DELETE')
 
@@ -61,7 +72,7 @@
 
                                 </tr>
                                 
-                                {{-- <?php } ?> --}}
+                                <?php $i++; ?>   
 
                             @endforeach             
                             

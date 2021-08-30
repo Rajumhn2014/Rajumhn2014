@@ -15,7 +15,21 @@ class StudentController extends Controller
      */
     public function index()
     {
-        $students=student::all();
+        //$students=student::all();
+        $students=student::get()->map(function($data,$n){
+            return[
+                'id'=>$data->id,
+                'serial_number'=>$n +=1,
+                // 'fullname'=>$data->fname.'.'.$data->lname,
+                'fname'=>$data->fname,
+                'lname'=>$data->lname,
+                'email'=>$data->email,
+                'phone'=>$data->phone,
+                'gender'=>$data->gender,
+                'status'=>$data->status,
+                'image'=>$data->image?$data->image:'',
+            ];
+        });
 
         //dd($students);
         
@@ -50,6 +64,7 @@ class StudentController extends Controller
         $students->email=$request->email;
         $students->phone=$request->phone;
         $students->gender=$request->gender;
+        $students->status='1';
 
         //$students->image=$request->image;
 
@@ -91,7 +106,20 @@ class StudentController extends Controller
      */
     public function show($id)
     {
-        
+           $student=student::FindOrFail($id);
+           if($student->status)
+           {
+               $student->status=0;
+
+           }
+           else
+           {
+               $student->status=1;
+           }
+           $student->save();
+
+           return redirect()->route('student.index')->with('success','New status changed');
+
     }
 
     /**
